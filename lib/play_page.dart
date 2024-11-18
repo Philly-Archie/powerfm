@@ -129,13 +129,13 @@ class _PlayPageState extends State<PlayPage> {
       child: Stack(
         clipBehavior: Clip.none,
         children: [
-          // Background image with rounded corners
+          // Background image
           Container(
             height: 200,
             width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
-              image: DecorationImage(
+              image: const DecorationImage(
                 image: AssetImage('assets/images/pic3.jpg'),
                 fit: BoxFit.cover,
               ),
