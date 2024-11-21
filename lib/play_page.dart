@@ -44,6 +44,7 @@ class _PlayPageState extends State<PlayPage> {
                             ),
                           ],
                         ),
+
                         Padding(
                           padding: const EdgeInsets.only(right: 8.0),
                           child: TextButton(
@@ -71,7 +72,7 @@ class _PlayPageState extends State<PlayPage> {
                                 Icon(
                                   Icons.arrow_downward_outlined,
                                   color: Colors.black,
-                                  size: 14, // Smaller icon size
+                                  size: 14,
                                 ),
                               ],
                             ),
@@ -88,7 +89,7 @@ class _PlayPageState extends State<PlayPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const SizedBox(height: 70),
+                      const SizedBox(height: 80),
                       _buildHorizontalSection1('Last Played', [
                         _buildCard('God Only Knows', 'for KING + COUNTRY', 'assets/images/pic4.jpg'),
                         _buildCard('To Be Announced', 'Artist Name', 'assets/images/pic1.jpg'),
@@ -111,7 +112,7 @@ class _PlayPageState extends State<PlayPage> {
             ),
             // Overlapping Card
             Positioned(
-              top: 80,
+              top: 100,
               left: 16,
               right: 16,
               child: _buildPlayerSection(),
