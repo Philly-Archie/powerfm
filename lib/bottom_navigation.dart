@@ -3,8 +3,8 @@ import 'package:stylish_bottom_bar/stylish_bottom_bar.dart';
 import 'play_page.dart';
 import 'events_page.dart';
 import 'extras_page.dart';
+import 'contacts.dart';
 import 'about_page.dart';
-import 'contacts_page.dart';
 
 class BottomNavScreen extends StatefulWidget {
   const BottomNavScreen({super.key});
@@ -13,28 +13,32 @@ class BottomNavScreen extends StatefulWidget {
   _BottomNavScreen createState() => _BottomNavScreen();
 }
 
-
 class _BottomNavScreen extends State<BottomNavScreen> {
   int selected = 2;
   final PageController controller = PageController(initialPage: 2);
+  bool hidePlayPage = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: PageView(
-        controller: controller,
-        onPageChanged: (index) {
-          setState(() {
-            selected = index;
-          });
-        },
-        children: [
-          EventsPage(),
-          ExtrasPage(),
-          PlayPage(),
-          ContactsPage(),
-          AboutPage(),
-        ],
+      body: GestureDetector(
+        onHorizontalDragUpdate: (_) {},
+        child: PageView(
+          controller: controller,
+          onPageChanged: (index) {
+            setState(() {
+              selected = index;
+            });
+          },
+          physics: const NeverScrollableScrollPhysics(),
+          children: [
+            EventsPage(),
+            ExtrasPage(),
+            if (!hidePlayPage) PlayPage(),
+            AboutPage(),
+            ContactsPage(),
+          ],
+        ),
       ),
       bottomNavigationBar: StylishBottomBar(
         option: AnimatedBarOptions(
@@ -56,11 +60,18 @@ class _BottomNavScreen extends State<BottomNavScreen> {
             unSelectedColor: Colors.grey,
             selectedColor: Colors.blueAccent,
           ),
+          if (!hidePlayPage)
+            BottomBarItem(
+              icon: const Icon(Icons.home),
+              title: const Text('Home'),
+              unSelectedColor: Colors.white,
+              selectedColor: Colors.white,
+            ),
           BottomBarItem(
             icon: const Icon(Icons.info_outline_rounded),
             title: const Text('About'),
             unSelectedColor: Colors.grey,
-            selectedColor: Colors.grey,
+            selectedColor: Colors.blueAccent,
           ),
           BottomBarItem(
             icon: const Icon(Icons.contact_mail_outlined),
@@ -73,16 +84,17 @@ class _BottomNavScreen extends State<BottomNavScreen> {
         hasNotch: true,
         currentIndex: selected,
         onTap: (index) {
-          if (index == selected) return;
+          if (index == selected)
+            return; // Prevent re-selection of the current page
           setState(() {
-            selected = index;
-            controller.jumpToPage(index);
+            selected = index; // Update selected page index
+            controller.jumpToPage(index); // Navigate to the selected page
           });
         },
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          controller.jumpToPage(2);
+          controller.jumpToPage(2); // Navigate to PlayPage when FAB is pressed
         },
         backgroundColor: Colors.blueAccent,
         child: Icon(
