@@ -4,7 +4,7 @@ import 'play_page.dart';
 import 'events_page.dart';
 import 'extras_page.dart';
 import 'contacts.dart';
-import 'about_page.dart';
+import 'streaming_page.dart';
 
 class BottomNavScreen extends StatefulWidget {
   const BottomNavScreen({super.key});
@@ -32,11 +32,11 @@ class _BottomNavScreen extends State<BottomNavScreen> {
           },
           physics: const NeverScrollableScrollPhysics(),
           children: [
-            EventsPage(),
-            ExtrasPage(),
-            if (!hidePlayPage) PlayPage(),
-            AboutPage(),
-            ContactsPage(),
+            if (!hidePlayPage) const PlayPage(),
+            const ExtrasPage(),
+            const StreamingPage(),
+            const EventsPage(),
+            const ContactsPage(),
           ],
         ),
       ),
@@ -49,35 +49,35 @@ class _BottomNavScreen extends State<BottomNavScreen> {
         ),
         items: [
           BottomBarItem(
-            icon: const Icon(Icons.event_outlined),
-            title: const Text('Events'),
+            icon: const Icon(Icons.home),
+            title: const Text('Home'),
             unSelectedColor: Colors.grey,
-            selectedColor: Colors.blueAccent,
+            selectedColor: Colors.black,
           ),
           BottomBarItem(
-            icon: const Icon(Icons.extension_outlined),
+            icon: const Icon(Icons.search),
             title: const Text('Extras'),
             unSelectedColor: Colors.grey,
-            selectedColor: Colors.blueAccent,
+            selectedColor: Colors.black,
           ),
           if (!hidePlayPage)
             BottomBarItem(
-              icon: const Icon(Icons.home),
-              title: const Text('Home'),
+              icon: const Icon(Icons.play_circle),
+              title: const Text('Play'),
               unSelectedColor: Colors.white,
               selectedColor: Colors.white,
             ),
           BottomBarItem(
-            icon: const Icon(Icons.info_outline_rounded),
-            title: const Text('About'),
+            icon: const Icon(Icons.notifications),
+            title: const Text('Events'),
             unSelectedColor: Colors.grey,
-            selectedColor: Colors.blueAccent,
+            selectedColor: Colors.black,
           ),
           BottomBarItem(
-            icon: const Icon(Icons.contact_mail_outlined),
+            icon: const Icon(Icons.person),
             title: const Text('Contacts'),
             unSelectedColor: Colors.grey,
-            selectedColor: Colors.blueAccent,
+            selectedColor: Colors.black,
           ),
         ],
         fabLocation: StylishBarFabLocation.center,
@@ -96,10 +96,12 @@ class _BottomNavScreen extends State<BottomNavScreen> {
         onPressed: () {
           controller.jumpToPage(2); // Navigate to PlayPage when FAB is pressed
         },
-        backgroundColor: Colors.blueAccent,
+        backgroundColor: Colors.white,
         child: Icon(
-          selected == 2 ? Icons.home : Icons.home_outlined,
-          color: selected == 2 ? Colors.white : Colors.black,
+          selected == 2
+              ? Icons.play_circle_fill
+              : Icons.play_circle_fill_outlined,
+          color: selected == 2 ? Colors.black : Colors.grey,
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,

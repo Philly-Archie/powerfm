@@ -15,15 +15,39 @@ class SplashScreen extends StatelessWidget {
     });
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFF2E4592),
       body: Center(
-        child: ClipOval(
-          child: Image.asset(
-            'assets/images/logo.jpg',
-            width: 200,
-            height: 200,
-            fit: BoxFit.cover,
-          ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ClipOval(
+              child: Image.asset(
+                'assets/images/logo.jpg',
+                width: 200,
+                height: 200,
+                fit: BoxFit.cover,
+              ),
+            ),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+            Text(
+              'POWER 104.1 FM',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: MediaQuery.of(context).size.width * 0.1,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+            Text(
+              'All about love',
+              style: TextStyle(
+                color: Colors.white.withOpacity(0.8),
+                fontSize: MediaQuery.of(context).size.width * 0.06,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
         ),
       ),
     );

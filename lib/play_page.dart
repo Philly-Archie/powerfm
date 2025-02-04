@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'streaming_page.dart';
 import 'audio_player_service.dart';
 
 class PlayPage extends StatefulWidget {
@@ -15,107 +16,96 @@ class _PlayPageState extends State<PlayPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
-        child: Stack(
+        child: Column(
           children: [
-            Column(
-              children: [
-                Container(
-                  height: 210,
-                  child: AppBar(
-                    toolbarHeight: 100,
-                    title: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            // AppBar Section
+            Container(
+              child: AppBar(
+                title: const Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
                       children: [
-                        Row(
-                          children: [
-                            Image.asset(
-                              'assets/images/logo.png',
-                              height: 150,
-                              width: 70,
-                            ),
-                            const SizedBox(width: 20),
-                            const Text(
-                              'Power FM',
-                              style: TextStyle(
-                                fontSize: 40,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ],
-                        ),
-
-                        Padding(
-                          padding: const EdgeInsets.only(right: 8.0),
-                          child: TextButton(
-                            onPressed: () {},
-                            style: TextButton.styleFrom(
-                              backgroundColor: Colors.white,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 12.0,
-                                vertical: 6.0,
-                              ),
-                            ),
-                            child: const Row(
-                              children: [
-                                Text(
-                                  "Extras",
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 14,
-                                  ),
-                                ),
-                                SizedBox(width: 2),
-                                Icon(
-                                  Icons.arrow_downward_outlined,
-                                  color: Colors.black,
-                                  size: 14,
-                                ),
-                              ],
-                            ),
+                        SizedBox(width: 20),
+                        Text(
+                          'Welcome',
+                          style: TextStyle(
+                            fontSize: 40,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
                           ),
                         ),
                       ],
                     ),
-                    backgroundColor: Colors.blue,
-                    centerTitle: true,
-                  ),
+                  ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(height: 80),
-                      _buildHorizontalSection1('Last Played', [
-                        _buildCard('God Only Knows', 'for KING + COUNTRY', 'assets/images/pic4.jpg'),
-                        _buildCard('To Be Announced', 'Artist Name', 'assets/images/pic1.jpg'),
-                        _buildCard('Another Song', 'Another Artist', 'assets/images/pic3.jpg'),
-                      ]),
-                      const SizedBox(height: 16),
-                      _buildHorizontalSection('New This Week', [
-                        _buildVerticalCard('Watch Live Performance', 'Seph Schlueter', 'assets/images/pic5.jpg'),
-                        _buildVerticalCard('K-LOVE Artists Performance', 'Read + Listen', 'assets/images/pic6.jpg'),
-                      ]),
-                      _buildHorizontalSection('Top Played', [
-                        _buildVerticalCard('Watch Live Performance', 'Seph Schlueter', 'assets/images/pic4.jpg'),
-                        _buildVerticalCard(
-                            'K-LOVE Artists Performance', 'Read + Listen', 'assets/images/pic5.jpg'),
-                      ]),
-                    ],
-                  ),
-                ),
-              ],
+              ),
             ),
-            // Overlapping Card
-            Positioned(
-              top: 100,
-              left: 16,
-              right: 16,
+
+            // Search Bar Section
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Column(
+                children: [
+                  const SizedBox(height: 20),
+                  Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: TextField(
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        prefixIcon: Icon(Icons.menu, color: Colors.grey[600]),
+                        hintText: 'Search',
+                        hintStyle: TextStyle(color: Colors.grey[600]),
+                        suffixIcon: Icon(Icons.search, color: Colors.grey[600]),
+                        contentPadding: const EdgeInsets.symmetric(
+                          vertical: 16,
+                          horizontal: 20,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            // PlayerCard Section
+            Padding(
+              padding: const EdgeInsets.all(16.0),
               child: _buildPlayerSection(),
+            ),
+
+            // Rest of the Content
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildHorizontalSection1([
+                    _buildCard('Live Worship', 'Hillsong United',
+                        'assets/images/pic4.jpg', context),
+                    _buildCard('Acoustic Session', 'Lauren Daigle',
+                        'assets/images/pic1.jpg', context),
+                  ]),
+                  const SizedBox(height: 16),
+                  _buildHorizontalSection('Verse Of The Day', [
+                    SizedBox(
+                      width: MediaQuery.of(context)
+                          .size
+                          .width, // Adjust width as needed
+                      child: _buildVerseCard(
+                        context,
+                        'Ask Me, And I will make Nations Your inheritance, the ends of the earth your possession.',
+                        'Psalms 2:8 NIV',
+                        'assets/images/pic5.jpg',
+                      ),
+                    ),
+                  ])
+                ],
+              ),
             ),
           ],
         ),
@@ -123,74 +113,100 @@ class _PlayPageState extends State<PlayPage> {
     );
   }
 
-
   Widget _buildPlayerSection() {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Stack(
-        clipBehavior: Clip.none,
-        children: [
-          // Background image
-          Container(
-            height: 200,
-            width: MediaQuery.of(context).size.width,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              image: const DecorationImage(
-                image: AssetImage('assets/images/pic3.jpg'),
-                fit: BoxFit.cover,
+      child: Container(
+        height: 200,
+        width: MediaQuery.of(context).size.width,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          image: const DecorationImage(
+            image: AssetImage('assets/images/pic3.jpg'),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Stack(
+          children: [
+            // Opacity overlay container
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.black.withOpacity(0.4),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              padding: const EdgeInsets.all(16.0),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            const Text(
+                              'Stream Live',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 24,
+                                color: Colors.white,
+                              ),
+                            ),
+                            Text(
+                              'Live Radio: Your Sound, Your Radio Station!',
+                              style: TextStyle(
+                                color: Colors.white.withOpacity(0.8),
+                                fontSize: 20,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      // Play button
+                      FloatingActionButton(
+                        onPressed: () {
+                          //Navigate to streaming page
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const StreamingPage()),
+                          );
+
+                          // setState(() {
+                          //   _audioPlayerService.playPause();
+                          // });
+                        },
+                        backgroundColor: Colors.white,
+                        elevation: 2,
+                        shape: const CircleBorder(
+                          side: BorderSide(
+                            color: Colors.blueAccent,
+                            width: 2,
+                          ),
+                        ),
+                        child: Icon(
+                          _audioPlayerService.isPlaying
+                              ? Icons.pause
+                              : Icons.play_arrow,
+                          color: Colors.blueAccent,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
-          ),
-          // Opacity overlay container
-          Container(
-            height: 200,
-            width: MediaQuery.of(context).size.width,
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.2),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            padding: const EdgeInsets.only(left: 8.0, right: 80.0),
-            child: const Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text('If I Got Jesus', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24)),
-                Text('Ben Fuller', style: TextStyle(color: Colors.black54, fontSize: 20)),
-              ],
-            ),
-          ),
-          // Floating action button
-          Positioned(
-            bottom: -30,
-            right: 60,
-            child: FloatingActionButton(
-              onPressed: () {
-                setState(() {
-                  _audioPlayerService.playPause();
-                });
-              },
-              backgroundColor: Colors.white,
-              elevation: 2,
-              shape: const CircleBorder(
-                side: BorderSide(
-                  color: Colors.blueAccent,
-                  width: 2,
-                ),
-              ),
-              child: Icon(
-                _audioPlayerService.isPlaying ? Icons.pause : Icons.play_arrow,
-                color: Colors.blueAccent,
-              ),
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
-
-
-
 
   Widget _buildHorizontalSection(String title, List<Widget> cards) {
     return Column(
@@ -200,7 +216,7 @@ class _PlayPageState extends State<PlayPage> {
           padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
           child: Text(
             title,
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
           ),
         ),
         SizedBox(
@@ -214,60 +230,104 @@ class _PlayPageState extends State<PlayPage> {
     );
   }
 
-  Widget _buildHorizontalSection1(String title, List<Widget> cards) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
-          child: Text(
-            title,
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-        ),
-        SizedBox(
-          height: 100,
-          child: ListView(
-            scrollDirection: Axis.horizontal,
-            children: cards,
-          ),
-        ),
-      ],
+  Widget _buildHorizontalSection1(List<Widget> cards) {
+    return SizedBox(
+      height: 150,
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        children: cards,
+      ),
     );
   }
 
+  Widget _buildCard(
+      String title, String subtitle, String imagePath, BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
 
-  Widget _buildCard(String title, String subtitle, String imagePath) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Container(
-        height: 60,
-        width: 250,
-        decoration: BoxDecoration(
-          color: Colors.grey[300],
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                height: 60,
-                width: 60,
-                decoration: BoxDecoration(
-                  color: Colors.grey,
-                  borderRadius: BorderRadius.circular(8),
-                  image: DecorationImage(
-                    image: AssetImage(imagePath),
-                    fit: BoxFit.cover,
-                  ),
-                ),
+    return SizedBox(
+      width: screenWidth / 2,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        child: Container(
+          height: 150,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            image: DecorationImage(
+              image: AssetImage(imagePath),
+              fit: BoxFit.cover,
+            ),
+          ),
+          child: Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              gradient: LinearGradient(
+                begin: Alignment.bottomCenter,
+                end: Alignment.topCenter,
+                colors: [
+                  Colors.black.withOpacity(0.6),
+                  Colors.transparent,
+                ],
               ),
             ),
+            child: Align(
+              alignment: Alignment.bottomLeft,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  Text(
+                    subtitle,
+                    style: const TextStyle(
+                      color: Colors.white70,
+                      fontSize: 14,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildVerticalCard(
+      BuildContext context, String title, String subtitle, String imagePath) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: Container(
+        width: MediaQuery.of(context).size.width, // Ensure full width
+        height: 180, // Card height
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 6,
+              spreadRadius: 2,
+              offset: const Offset(2, 4),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            // Left Side - Text Information
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -276,20 +336,37 @@ class _PlayPageState extends State<PlayPage> {
                       title,
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 16,
+                        fontSize: 18,
                       ),
+                      maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
+                    const SizedBox(height: 6),
                     Text(
-                      subtitle,
+                      subtitle, // Bible verse or description
                       style: const TextStyle(
-                        color: Colors.black54,
+                        color: Colors.black87,
                         fontSize: 14,
                       ),
+                      maxLines: 3,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ],
                 ),
+              ),
+            ),
+            // Right Side - Image taking half of the card width
+            ClipRRect(
+              borderRadius: const BorderRadius.only(
+                topRight: Radius.circular(12),
+                bottomRight: Radius.circular(12),
+              ),
+              child: Image.asset(
+                imagePath,
+                width: MediaQuery.of(context).size.width *
+                    0.4, // Image takes ~40% of screen width
+                height: double.infinity,
+                fit: BoxFit.cover,
               ),
             ),
           ],
@@ -298,61 +375,52 @@ class _PlayPageState extends State<PlayPage> {
     );
   }
 
-
-  Widget _buildVerticalCard(String title, String subtitle, String imagePath) {
+  Widget _buildVerseCard(
+      BuildContext context, String verse, String reference, String imagePath) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Container(
-        width: 250,
-        decoration: BoxDecoration(
-          color: Colors.grey[300],
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                height: 150,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: Colors.grey,
-                  borderRadius: BorderRadius.circular(8),
-                  image: DecorationImage(
-                    image: AssetImage(imagePath),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: Row(
+        children: [
+          // Left Side - Image with rounded corners
+          ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: Image.asset(
+              imagePath,
+              width: 150,
+              height: 200,
+              fit: BoxFit.cover,
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 8.0, vertical: 4.0),
+          ),
+          const SizedBox(width: 12),
+
+          Expanded(
+            child: Container(
+              width: 200, // Set a fixed width
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    title,
+                    verse,
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
                     ),
+                    maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
+                  const SizedBox(height: 4),
                   Text(
-                    subtitle,
+                    reference,
                     style: const TextStyle(
-                      color: Colors.black54,
                       fontSize: 14,
+                      color: Colors.grey, // Faded look for reference
                     ),
-                    overflow: TextOverflow.ellipsis,
                   ),
                 ],
               ),
             ),
-          ],
-        ),
+          )
+        ],
       ),
     );
   }
