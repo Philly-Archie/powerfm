@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:powerfm/services/verse_of_day_service.dart';
 import 'package:powerfm/splash_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -21,6 +22,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => EventProvider()),
         ChangeNotifierProvider(create: (_) => PostProvider()),
         ChangeNotifierProvider(create: (_) => MediaProvider()),
+        ChangeNotifierProvider(create: (_) => VerseOfDayProvider()),
       ],
       child: MaterialApp(
         title: 'PowerFm',

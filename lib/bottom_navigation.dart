@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:stylish_bottom_bar/stylish_bottom_bar.dart';
-import 'play_page.dart';
+import 'home_page.dart';
 import 'events_page.dart';
 import 'extras_page.dart';
 import 'contacts.dart';
@@ -84,8 +84,9 @@ class _BottomNavScreen extends State<BottomNavScreen> {
         hasNotch: true,
         currentIndex: selected,
         onTap: (index) {
-          if (index == selected)
+          if (index == selected) {
             return; // Prevent re-selection of the current page
+          }
           setState(() {
             selected = index; // Update selected page index
             controller.jumpToPage(index); // Navigate to the selected page
