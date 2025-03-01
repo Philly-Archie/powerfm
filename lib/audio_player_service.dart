@@ -70,11 +70,24 @@ class AudioPlayerService {
     }
   }
 
-  void playPause() {
+  // Future<void> playPause() async {
+  //   if (isPlaying) {
+  //     await _audioPlayer.pause();
+  //   } else {
+  //     await _audioPlayer.play();
+  //   }
+  //   isPlaying = !isPlaying;
+  // }
+
+  Future<void> playPause() async {
+    if (kDebugMode) {
+      print('Play/Pause button pressed. isPlaying: $isPlaying');
+    }
     if (isPlaying) {
-      _audioPlayer.pause();
+      await _audioPlayer.pause();
     } else {
-      _audioPlayer.play();
+      await _audioPlayer.setUrl(url);
+      await _audioPlayer.play();
     }
     isPlaying = !isPlaying;
   }

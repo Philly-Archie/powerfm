@@ -12,13 +12,30 @@ class _StreamingPageState extends State<StreamingPage> {
   final AudioPlayerService _audioPlayerService = AudioPlayerService();
   bool isPlaying = false;
 
+  // void _togglePlayPause() {
+  //   setState(() {
+  //     if (isPlaying) {
+  //       _audioPlayerService.playPause();
+  //     } else {
+  //       _audioPlayerService.playPause();
+  //     }
+  //     isPlaying = !isPlaying;
+  //   });
+  // }
+
+  @override
+  void initState() {
+    super.initState();
+    _audioPlayerService.playerStateStream.listen((state) {
+      setState(() {
+        isPlaying = state;
+      });
+    });
+  }
+
   void _togglePlayPause() {
     setState(() {
-      if (isPlaying) {
-        _audioPlayerService.playPause();
-      } else {
-        _audioPlayerService.playPause();
-      }
+      _audioPlayerService.playPause();
       isPlaying = !isPlaying;
     });
   }
@@ -87,7 +104,7 @@ class _StreamingPageState extends State<StreamingPage> {
           const SizedBox(height: 20),
           const Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
+            children: [
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16.0),
                 child: Text("00:00", style: TextStyle(color: Colors.grey)),
