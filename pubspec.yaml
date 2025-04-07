@@ -33,14 +33,17 @@ dependencies:
   parallax_rain: ^1.1.1
   carousel_slider: ^4.2.1
   stylish_bottom_bar: ^1.1.0
-  http: ^1.2.2
+  http: ^0.13.6
   provider: ^6.1.2
+  google_ml_kit: ^0.19.0
+  bible: ^1.0.0
 
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.6
   audioplayers: ^6.1.0
+  image_picker: ^1.1.2
 
 dev_dependencies:
   flutter_test:

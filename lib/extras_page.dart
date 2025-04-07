@@ -288,6 +288,264 @@
 //   }
 // }
 
+// import 'package:flutter/material.dart';
+// import 'package:audioplayers/audioplayers.dart';
+// import 'models/playlist_provider.dart';
+
+// class ExtrasPage extends StatefulWidget {
+//   const ExtrasPage({Key? key}) : super(key: key);
+
+//   @override
+//   State<ExtrasPage> createState() => _ExtrasPageState();
+// }
+
+// class _ExtrasPageState extends State<ExtrasPage> {
+//   final AudioPlayer _audioPlayer = AudioPlayer();
+//   final PlaylistProvider _playlistProvider = PlaylistProvider();
+//   bool _isPlaying = false;
+//   bool _isLoaded = false;
+//   Duration _currentPosition = Duration.zero;
+//   Duration _totalDuration = Duration.zero;
+
+//   @override
+//   void initState() {
+//     super.initState();
+//     _playlistProvider.currentSongIndex = 0; // Start with the first song
+//     _loadSong();
+
+//     // Listen to audio position changes
+//     _audioPlayer.onPositionChanged.listen((position) {
+//       setState(() {
+//         _currentPosition = position;
+//       });
+//     });
+
+//     // Listen to the total duration of the current track
+//     _audioPlayer.onDurationChanged.listen((duration) {
+//       setState(() {
+//         _totalDuration = duration;
+//       });
+//     });
+
+//     // Listen for song completion
+//     _audioPlayer.onPlayerComplete.listen((_) => _playNextSong());
+//   }
+
+//   void _loadSong() async {
+//     if (_playlistProvider.currentSongIndex != null) {
+//       final currentSong =
+//           _playlistProvider.playlists[_playlistProvider.currentSongIndex!];
+//       await _audioPlayer.setSource(AssetSource(currentSong.audiopath));
+//       setState(() {
+//         _isLoaded = true;
+//         _currentPosition = Duration.zero;
+//         _totalDuration = Duration.zero;
+//       });
+//     }
+//   }
+
+//   void _playPauseMusic() async {
+//     if (_isPlaying) {
+//       await _audioPlayer.pause();
+//     } else {
+//       await _audioPlayer.resume();
+//     }
+//     setState(() {
+//       _isPlaying = !_isPlaying;
+//     });
+//   }
+
+//   void _playNextSong() {
+//     if (_playlistProvider.currentSongIndex != null) {
+//       _audioPlayer.stop();
+//       setState(() {
+//         _playlistProvider.currentSongIndex =
+//             (_playlistProvider.currentSongIndex! + 1) %
+//                 _playlistProvider.playlists.length;
+//         _isPlaying = false;
+//       });
+//       _loadSong();
+//     }
+//   }
+
+//   void _playPreviousSong() {
+//     if (_playlistProvider.currentSongIndex != null) {
+//       _audioPlayer.stop();
+//       setState(() {
+//         // Restart current song if more than 2 seconds have played
+//         if (_currentPosition.inSeconds > 2) {
+//           _currentPosition = Duration.zero;
+//         } else {
+//           _playlistProvider.currentSongIndex =
+//               (_playlistProvider.currentSongIndex! -
+//                       1 +
+//                       _playlistProvider.playlists.length) %
+//                   _playlistProvider.playlists.length;
+//         }
+//         _isPlaying = false;
+//       });
+//       _loadSong();
+//     }
+//   }
+
+//   void seek(Duration currentPosition) async {
+//     await _audioPlayer.seek(currentPosition);
+//   }
+
+//   @override
+//   void dispose() {
+//     _audioPlayer.dispose();
+//     super.dispose();
+//   }
+
+//   String _formatDuration(Duration duration) {
+//     final minutes = duration.inMinutes.toString().padLeft(2, '0');
+//     final seconds = duration.inSeconds.remainder(60).toString().padLeft(2, '0');
+//     return '$minutes:$seconds';
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     final currentSong = _playlistProvider.currentSongIndex != null
+//         ? _playlistProvider.playlists[_playlistProvider.currentSongIndex!]
+//         : null;
+
+//     return SafeArea(
+//       child: Scaffold(
+//         body: Stack(
+//           children: [
+//             // Background Image
+//             Container(
+//               decoration: const BoxDecoration(
+//                 image: DecorationImage(
+//                   image: AssetImage("assets/images/bg1.jpg"),
+//                   fit: BoxFit.cover,
+//                 ),
+//               ),
+//             ),
+
+//             Padding(
+//               padding: const EdgeInsets.all(16.0),
+//               child: Text(
+//                 'Power FM Extras',
+//                 style: TextStyle(
+//                   fontSize: 40,
+//                   fontWeight: FontWeight.bold,
+//                   color: Colors.white,
+//                   shadows: [
+//                     Shadow(
+//                       blurRadius: 10.0,
+//                       color: Colors.black.withOpacity(0.5),
+//                       offset: const Offset(2.0, 2.0),
+//                     ),
+//                   ],
+//                 ),
+//               ),
+//             ),
+
+//             // Music Player UI
+//             currentSong != null
+//                 ? Column(
+//                     children: [
+//                       const Spacer(flex: 2),
+//                       ClipRRect(
+//                         borderRadius: BorderRadius.circular(8),
+//                         child: Image.asset(
+//                           currentSong.albumArtImagePath,
+//                           height: 300,
+//                           width: 300,
+//                           fit: BoxFit.cover,
+//                         ),
+//                       ),
+//                       const Spacer(),
+//                       Text(
+//                         currentSong.songName,
+//                         style: const TextStyle(
+//                           fontSize: 20,
+//                           fontWeight: FontWeight.bold,
+//                           color: Colors.white,
+//                         ),
+//                       ),
+//                       Text(
+//                         currentSong.artistName,
+//                         style: const TextStyle(
+//                           fontSize: 16,
+//                           color: Colors.grey,
+//                         ),
+//                       ),
+//                       const SizedBox(height: 20),
+
+//                       // Playback Slider
+//                       Slider(
+//                         value: _currentPosition.inSeconds.toDouble(),
+//                         min: 0,
+//                         max: _totalDuration.inSeconds > 0
+//                             ? _totalDuration.inSeconds.toDouble()
+//                             : 1, // Avoid zero max value
+//                         activeColor: Colors.red,
+//                         inactiveColor: Colors.grey,
+//                         onChanged: (value) {
+//                           seek(Duration(seconds: value.toInt()));
+//                         },
+//                       ),
+
+//                       Row(
+//                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                         children: [
+//                           Text(
+//                             _formatDuration(_currentPosition),
+//                             style: const TextStyle(color: Colors.white),
+//                           ),
+//                           Text(
+//                             _formatDuration(_totalDuration),
+//                             style: const TextStyle(color: Colors.white),
+//                           ),
+//                         ],
+//                       ),
+//                       const SizedBox(height: 20),
+
+//                       // Controls
+//                       Row(
+//                         mainAxisAlignment: MainAxisAlignment.center,
+//                         children: [
+//                           IconButton(
+//                             onPressed: _isLoaded ? _playPreviousSong : null,
+//                             icon: const Icon(Icons.skip_previous),
+//                             iconSize: 40,
+//                             color: Colors.white,
+//                           ),
+//                           FloatingActionButton(
+//                             backgroundColor: Colors.red,
+//                             onPressed: _isLoaded ? _playPauseMusic : null,
+//                             child: Icon(
+//                               _isPlaying ? Icons.pause : Icons.play_arrow,
+//                               size: 40,
+//                             ),
+//                           ),
+//                           IconButton(
+//                             onPressed: _isLoaded ? _playNextSong : null,
+//                             icon: const Icon(Icons.skip_next),
+//                             iconSize: 40,
+//                             color: Colors.white,
+//                           ),
+//                         ],
+//                       ),
+//                       const Spacer(flex: 2),
+//                     ],
+//                   )
+//                 : const Center(
+//                     child: Text(
+//                       "No Song Selected",
+//                       style: TextStyle(color: Colors.white),
+//                     ),
+//                   ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
+
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'models/playlist_provider.dart';
@@ -310,9 +568,19 @@ class _ExtrasPageState extends State<ExtrasPage> {
   @override
   void initState() {
     super.initState();
-    _playlistProvider.currentSongIndex = 0; // Start with the first song
-    _loadSong();
+    _fetchAndLoadSongs();
+    _setupAudioListeners();
+  }
 
+  Future<void> _fetchAndLoadSongs() async {
+    await _playlistProvider.fetchAudioFiles();
+    if (_playlistProvider.playlists.isNotEmpty) {
+      _playlistProvider.currentSongIndex = 0; // Start with the first song
+      _loadSong();
+    }
+  }
+
+  void _setupAudioListeners() {
     // Listen to audio position changes
     _audioPlayer.onPositionChanged.listen((position) {
       setState(() {
@@ -335,7 +603,7 @@ class _ExtrasPageState extends State<ExtrasPage> {
     if (_playlistProvider.currentSongIndex != null) {
       final currentSong =
           _playlistProvider.playlists[_playlistProvider.currentSongIndex!];
-      await _audioPlayer.setSource(AssetSource(currentSong.audiopath));
+      await _audioPlayer.setSource(UrlSource(currentSong.audioUrl));
       setState(() {
         _isLoaded = true;
         _currentPosition = Duration.zero;
@@ -450,11 +718,19 @@ class _ExtrasPageState extends State<ExtrasPage> {
                       const Spacer(flex: 2),
                       ClipRRect(
                         borderRadius: BorderRadius.circular(8),
-                        child: Image.asset(
+                        child: Image.network(
                           currentSong.albumArtImagePath,
                           height: 300,
                           width: 300,
                           fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Image.asset(
+                              'assets/images/default_album_art.jpg',
+                              height: 300,
+                              width: 300,
+                              fit: BoxFit.cover,
+                            );
+                          },
                         ),
                       ),
                       const Spacer(),

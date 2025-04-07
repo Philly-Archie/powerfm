@@ -5,8 +5,8 @@ import 'package:provider/provider.dart';
 
 // Import your providers here
 import 'services/event_service.dart';
-import 'services/media_service.dart';
-import 'services/posts_service.dart';
+//import 'services/media_service.dart';
+//import 'services/posts_service.dart';
 
 void main() {
   runApp(const MyApp());
@@ -20,8 +20,8 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => EventProvider()),
-        ChangeNotifierProvider(create: (_) => PostProvider()),
-        ChangeNotifierProvider(create: (_) => MediaProvider()),
+        //ChangeNotifierProvider(create: (_) => PostProvider()),
+        //ChangeNotifierProvider(create: (_) => MediaProvider()),
         ChangeNotifierProvider(create: (_) => VerseOfDayProvider()),
       ],
       child: MaterialApp(

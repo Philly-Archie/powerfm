@@ -1,8 +1,162 @@
+// import 'package:flutter/material.dart';
+// import 'package:powerfm/services/verse_of_day_service.dart';
+// import 'package:provider/provider.dart';
+// import 'streaming_page.dart';
+// import 'audio_player_service.dart';
+
+// class PlayPage extends StatefulWidget {
+//   const PlayPage({super.key});
+
+//   @override
+//   _PlayPageState createState() => _PlayPageState();
+// }
+
+// class _PlayPageState extends State<PlayPage> {
+//   final AudioPlayerService _audioPlayerService = AudioPlayerService();
+
+//   @override
+//   void initState() {
+//     super.initState();
+//     // Fetch the data when the screen initializes
+//     Future.microtask(() =>
+//         Provider.of<VerseOfDayProvider>(context, listen: false)
+//             .fetchVerseOfTheDay());
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     final verseProvider = Provider.of<VerseOfDayProvider>(context);
+//     final verseData = verseProvider.verseOfTheDay;
+//     print('Verse Data: ${verseData?.title.rendered}');
+
+//     return Scaffold(
+//       body: SingleChildScrollView(
+//         child: Column(
+//           children: [
+//             // AppBar Section
+//             Container(
+//               child: AppBar(
+//                 title: const Row(
+//                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                   children: [
+//                     Row(
+//                       children: [
+//                         SizedBox(width: 20),
+//                         Text(
+//                           'Welcome',
+//                           style: TextStyle(
+//                             fontSize: 40,
+//                             fontWeight: FontWeight.bold,
+//                             color: Colors.black,
+//                           ),
+//                         ),
+//                       ],
+//                     ),
+//                   ],
+//                 ),
+//               ),
+//             ),
+
+//             // Search Bar Section
+//             Padding(
+//               padding: const EdgeInsets.symmetric(horizontal: 16.0),
+//               child: Column(
+//                 children: [
+//                   const SizedBox(height: 20),
+//                   Container(
+//                     width: double.infinity,
+//                     decoration: BoxDecoration(
+//                       color: Colors.grey[200],
+//                       borderRadius: BorderRadius.circular(10),
+//                     ),
+//                     child: TextField(
+//                       decoration: InputDecoration(
+//                         border: InputBorder.none,
+//                         prefixIcon: Icon(Icons.menu, color: Colors.grey[600]),
+//                         hintText: 'Search',
+//                         hintStyle: TextStyle(color: Colors.grey[600]),
+//                         suffixIcon: Icon(Icons.search, color: Colors.grey[600]),
+//                         contentPadding: const EdgeInsets.symmetric(
+//                           vertical: 16,
+//                           horizontal: 20,
+//                         ),
+//                       ),
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//             ),
+
+//             // PlayerCard Section
+//             Padding(
+//               padding: const EdgeInsets.all(16.0),
+//               child: _buildPlayerSection(),
+//             ),
+
+//             // Rest of the Content
+//             Padding(
+//               padding: const EdgeInsets.all(16.0),
+//               child: Column(
+//                 crossAxisAlignment: CrossAxisAlignment.start,
+//                 children: [
+//                   _buildHorizontalSection1([
+//                     _buildCard('PowerFm Extra', 'assets/images/streaming3.jpg',
+//                         context, 1),
+//                     _buildCard('Partner With Us',
+//                         'assets/images/streaming2.jpg', context, 4),
+//                   ]),
+//                   const SizedBox(height: 16),
+//                   _buildHorizontalSection('Verse Of The Day', [
+//                     SizedBox(
+//                       width: MediaQuery.of(context)
+//                           .size
+//                           .width, // Adjust width as needed
+//                       // child: Consumer<VerseOfDayProvider>(
+//                       //   builder: (context, verseProvider, child) {
+//                       //     final verseData = verseProvider.verseOfTheDay;
+
+//                       //     if (verseData == null) {
+//                       //       return Text("Loading...");
+//                       //     }
+
+//                       //     print(
+//                       //         'Verse Title: ${verseData.title}'); // Debugging log
+
+//                       //     return _buildVerseCard(
+//                       //       context,
+//                       //       verseData.title.rendered, // Correct access
+//                       //       verseData.content.rendered,
+//                       //       'assets/images/pic5.jpg',
+//                       //     );
+//                       //   },
+
+//                       child: _buildVerseCard(
+//                         // context,
+//                         // verseData?.title.rendered ?? 'Loading...',
+//                         // verseData?.content.rendered ?? '',
+//                         // 'assets/images/pic5.jpg',
+//                         context,
+//                         "Son of man, what is this proverb you have in the land of Israel: ‘The days go by and every vision comes to nothing’? Say to them, ‘This is what the Sovereign Lord says: I am going to put an end to this proverb, and they will no longer quote it in Israel.’ Say to them, ‘The days are near when every vision will be fulfilled.",
+//                         'Ezekiel 12:22-23 NIV',
+//                         'assets/images/vod.jpg',
+//                       ),
+//                     ),
+//                   ])
+//                 ],
+//               ),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+
 import 'package:flutter/material.dart';
-import 'package:powerfm/services/verse_of_day_service.dart';
+import 'package:powerfm/streaming_page.dart';
+import 'package:powerfm/verse_details.dart';
 import 'package:provider/provider.dart';
-import 'streaming_page.dart';
 import 'audio_player_service.dart';
+import 'services/verse_of_day_service.dart';
 
 class PlayPage extends StatefulWidget {
   const PlayPage({super.key});
@@ -17,7 +171,7 @@ class _PlayPageState extends State<PlayPage> {
   @override
   void initState() {
     super.initState();
-    // Fetch the data when the screen initializes
+    // Fetch the verse of the day when the screen initializes
     Future.microtask(() =>
         Provider.of<VerseOfDayProvider>(context, listen: false)
             .fetchVerseOfTheDay());
@@ -27,7 +181,6 @@ class _PlayPageState extends State<PlayPage> {
   Widget build(BuildContext context) {
     final verseProvider = Provider.of<VerseOfDayProvider>(context);
     final verseData = verseProvider.verseOfTheDay;
-    print('Verse Data: ${verseData?.title.rendered}');
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -108,41 +261,99 @@ class _PlayPageState extends State<PlayPage> {
                   const SizedBox(height: 16),
                   _buildHorizontalSection('Verse Of The Day', [
                     SizedBox(
-                      width: MediaQuery.of(context)
-                          .size
-                          .width, // Adjust width as needed
-                      // child: Consumer<VerseOfDayProvider>(
-                      //   builder: (context, verseProvider, child) {
-                      //     final verseData = verseProvider.verseOfTheDay;
+                      width: MediaQuery.of(context).size.width,
+                      child: verseData == null
+                          ? const Center(child: CircularProgressIndicator())
+                          : _buildVerseCard(
+                              context,
+                              verseData.title,
+                              verseData.sourceUrl,
+                              'assets/images/vod.jpg',
+                            ),
+                    ),
+                  ]),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
-                      //     if (verseData == null) {
-                      //       return Text("Loading...");
-                      //     }
+  Widget _buildVerseCard(
+    BuildContext context,
+    String verseReference, // Verse reference from your API
+    String imageUrl,
+    String fallbackImagePath,
+  ) {
+    final verseProvider = Provider.of<VerseOfDayProvider>(context);
+    final bibleVerse = verseProvider.bibleVerse;
 
-                      //     print(
-                      //         'Verse Title: ${verseData.title}'); // Debugging log
-
-                      //     return _buildVerseCard(
-                      //       context,
-                      //       verseData.title.rendered, // Correct access
-                      //       verseData.content.rendered,
-                      //       'assets/images/pic5.jpg',
-                      //     );
-                      //   },
-
-                      child: _buildVerseCard(
-                        // context,
-                        // verseData?.title.rendered ?? 'Loading...',
-                        // verseData?.content.rendered ?? '',
-                        // 'assets/images/pic5.jpg',
-                        context,
-                        "Son of man, what is this proverb you have in the land of Israel: ‘The days go by and every vision comes to nothing’? Say to them, ‘This is what the Sovereign Lord says: I am going to put an end to this proverb, and they will no longer quote it in Israel.’ Say to them, ‘The days are near when every vision will be fulfilled.",
-                        'Ezekiel 12:22-23 NIV',
-                        'assets/images/vod.jpg',
+    return GestureDetector(
+      onTap: () {
+        // Navigate to the detailed view
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => VerseDetailScreen(
+              verseReference: bibleVerse?.reference ?? verseReference,
+              verseText: bibleVerse?.text ?? 'Loading...',
+              imageUrl: imageUrl,
+            ),
+          ),
+        );
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        child: Row(
+          children: [
+            // Left Side - Image with rounded corners
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Image.network(
+                imageUrl,
+                width: 200,
+                height: 350,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return Image.asset(
+                    fallbackImagePath,
+                    width: 200,
+                    height: 350,
+                    fit: BoxFit.cover,
+                  );
+                },
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Container(
+                width: 200,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      bibleVerse?.text ??
+                          'Loading...', // Display the Bible verse text
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                      maxLines: 5,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      bibleVerse?.reference ??
+                          verseReference, // Display the verse reference
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey,
                       ),
                     ),
-                  ])
-                ],
+                  ],
+                ),
               ),
             ),
           ],
@@ -342,53 +553,53 @@ class _PlayPageState extends State<PlayPage> {
     );
   }
 
-  Widget _buildVerseCard(
-      BuildContext context, String verse, String reference, String imagePath) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Row(
-        children: [
-          // Left Side - Image with rounded corners
-          ClipRRect(
-            borderRadius: BorderRadius.circular(12),
-            child: Image.asset(
-              imagePath,
-              width: 200,
-              height: 350,
-              fit: BoxFit.cover,
-            ),
-          ),
-          const SizedBox(width: 12),
+  // Widget _buildVerseCard(
+  //     BuildContext context, String verse, String reference, String imagePath) {
+  //   return Padding(
+  //     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+  //     child: Row(
+  //       children: [
+  //         // Left Side - Image with rounded corners
+  //         ClipRRect(
+  //           borderRadius: BorderRadius.circular(12),
+  //           child: Image.asset(
+  //             imagePath,
+  //             width: 200,
+  //             height: 350,
+  //             fit: BoxFit.cover,
+  //           ),
+  //         ),
+  //         const SizedBox(width: 12),
 
-          Expanded(
-            child: Container(
-              width: 200, // Set a fixed width
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    verse,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    reference,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey, // Faded look for reference
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          )
-        ],
-      ),
-    );
-  }
+  //         Expanded(
+  //           child: Container(
+  //             width: 200, // Set a fixed width
+  //             child: Column(
+  //               crossAxisAlignment: CrossAxisAlignment.start,
+  //               children: [
+  //                 Text(
+  //                   verse,
+  //                   style: const TextStyle(
+  //                     fontWeight: FontWeight.bold,
+  //                     fontSize: 16,
+  //                   ),
+  //                   maxLines: 2,
+  //                   overflow: TextOverflow.ellipsis,
+  //                 ),
+  //                 const SizedBox(height: 4),
+  //                 Text(
+  //                   reference,
+  //                   style: const TextStyle(
+  //                     fontSize: 14,
+  //                     color: Colors.grey, // Faded look for reference
+  //                   ),
+  //                 ),
+  //               ],
+  //             ),
+  //           ),
+  //         )
+  //       ],
+  //     ),
+  //   );
+  // }
 }
