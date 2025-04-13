@@ -548,7 +548,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
-import 'models/playlist_provider.dart';
+import 'package:powerfm/services/playlist_service.dart';
 
 class ExtrasPage extends StatefulWidget {
   const ExtrasPage({Key? key}) : super(key: key);
